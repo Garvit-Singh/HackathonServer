@@ -1,0 +1,2 @@
+# HackathonServer
+ Server for hackathon
