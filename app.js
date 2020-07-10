@@ -6,7 +6,14 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 // github
 
+const defaultRoutes = require('./API/Routes/DefaultRouteCode')
 const userRoutes = require('./API/Routes/UserRoute')
+const productRoutes = require('./API/Routes/Product')
+
+app.use(morgan('dev'))
+app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.json())
+app.use(cors())
 
 mongoose.connect('mongodb+srv://garvit_singh:'+
         process.env.MONGO_ATLAS_PW+
@@ -16,13 +23,10 @@ mongoose.connect('mongodb+srv://garvit_singh:'+
             useUnifiedTopology: true
 }).catch( err => console.log(`Error from mongoose connection ${err}`));
 
-app.use(morgan('dev'))
-app.use(bodyParser.urlencoded({extended: false}))
-app.use(bodyParser.json())
-app.use(cors())
-
 // ROUTES TO BE APPENDED HERE
+app.use('/',defaultRoutes)
 app.use('/user',userRoutes)
+app.use('/products',productRoutes)
 
 app.use((req,res,next) => {
   const error = new Error('NOT FOUND')

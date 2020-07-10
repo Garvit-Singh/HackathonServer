@@ -6,7 +6,7 @@ const Product = require('../Models/Products');
 const User = require('../Models/User')
 
 //GET All products
-router.get('/products', (req,res,next) => {
+router.get('/', (req,res,next) => {
     Product.find()
     .sort({ _id: -1})
     .exec()
@@ -25,7 +25,7 @@ router.get('/products', (req,res,next) => {
     });
 });
 
-//GET One Product 
+//GET One Product
 router.get('/:productId', (req,res,next) => {
     const _id = req.params.productId;
     Product.findById(_id)
@@ -51,8 +51,8 @@ router.get('/:productId', (req,res,next) => {
     });
 });
 
-//POST Product
-router.post('/product',(req,res,next) => {
+//PATCH Product for posting
+router.patch('/',(req,res,next) => {
     const product = new Product({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
@@ -64,19 +64,22 @@ router.post('/product',(req,res,next) => {
         buyer_id: req.body.buyer_id,
         seller_id: req.body.seller_id
     });
-    const buyer_id = req.body.buyer_id;
-    User.findById(buyer_id)
-    .select('products')
-    .then((doc) => {
-        products = docs.products;
-        products += product._id;
-        updateOps[products] = products
-        User.update({buyer_id},{$set:updateOps})
-        .exec()
+    const seller_id = req.body.seller_id;
+    console.log(seller_id,'seller id')
+    User.findById(seller_id)
+    .then( doc => {
+        const updateOps = {}
+        doc.products.push(updateOps[product] = product)
+        doc.save()
         .then((result) => {
-            res.status(200).json({
-                message: 'Product Updated'
-            });
+                res.status(200).json({
+                message: 'Product Updated',
+                result: result
+        })
+        .catch(err => {
+            console.log('error in patch' +err);
+            res.status(500).json(err);
+        })
     })
     .catch((err) => {
         console.log(err);
@@ -85,7 +88,6 @@ router.post('/product',(req,res,next) => {
             });
         });
     });
-    User.update({ buyer_id })
     product.save()
     .then((result) => {
         res.status(201).json({

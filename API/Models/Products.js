@@ -8,7 +8,8 @@ const productSchema = mongoose.Schema({
 	price: { type: Number },
 	comments: [ { body: String, date: Date } ],
 	status: { type: String, required: true },
-	buyer_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+	buyer_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+	seller_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 });
 
 module.exports = mongoose.model('Product', productSchema);
