@@ -1,5 +1,6 @@
 {
   "env" : {
-      "MONGO_ATLAS_PW" : "qwsdcvyujkm"
+      "MONGO_ATLAS_PW" : "qwsdcvyujkm",
+      "JWT_KEY": "hackathonSeCert"
   }
 }
